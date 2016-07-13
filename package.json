@@ -1,0 +1,20 @@
+{
+  "name": "md2csv",
+  "version": "1.0.0",
+  "description": "Markdown to CSV Converter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sah2ed",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "htmlparser2": "^3.8.2",
+    "request": "^2.72.0",
+    "sendgrid": "^1.8.0"
+  },
+  "devDependencies": {
+    "longjohn": "^0.2.11"
+  }
+}
