@@ -28,6 +28,11 @@ wt create md2csv.js ^
   -s URL=https://gist.githubusercontent.com/<raw-file-name>.md
 ```
 
+For the actual conversion, simply set the `emailTo` and `url` query parameters in the url handed to you by `wt-cli`:
+```shell
+curl https://webtask.it.auth0.com/api/run/wt-<your-email>-0/md2csv?webtask_no_cache=1&emailTo=<your-email>@<domain.com>&url=https://git.io/vK4St
+```
+
 
 ## Local Deployment
 The app can also be run from the command line.

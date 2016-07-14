@@ -2,6 +2,7 @@
 
 var request = require('request');
 var URL_SAMPLE = 'https://git.io/vK4St';
+var EMAIL_SUBJECT = 'Webtask.io - Markdown2CSV: Conversion Successful';
 
 function log(message) {
 	if (process.env.NODE_ENV === 'development') {
@@ -28,22 +29,8 @@ module.exports = function (ctx, done) {
         .on('error', function(error) { log('Failed - GET error: ' + error); done(error); })
         .on('data', function(chunk) { dataCSV += chunk; })
         .on('end', function() {
-			console.log(dataCSV.indexOf("\\n") != -1);
-
-			var i = 0;
-			while (i < dataCSV.length)
-			{
-			    var j = dataCSV.indexOf("\\n", i);
-			    if (j == -1) j = dataCSV.length;
-			    var line = dataCSV.substr(i, j-i);
-
-			    if (dataCSV.indexOf('--') != -1) {
-					console.log(line);
-				}
-			    i = j+1;
-			}
-
-			done(null);
+			// TODO: can't use 'htmlparser' since webtask.io doesn't support 'soupselect'
+			// consider using https://github.com/fb55/htmlparser2
 		})
         .pipe(request.post(destOptions)
             .on('response', function(response) { log('OK - Fetched HTML formatted markdown file.'); })
@@ -52,7 +39,7 @@ module.exports = function (ctx, done) {
             .on('end', function() {
 				var sg = require('sendgrid')(ctx.data.EMAIL_SENDGRID_APIKEY); // webtask.io only supports v1.8.0
 				var email = new sg.Email();
-				email.subject = ctx.data.EMAIL_SUBJECT;
+				email.subject = ctx.data.EMAIL_SUBJECT || EMAIL_SUBJECT;
 				email.from = ctx.data.EMAIL_FROM;
 				email.to = ctx.data.emailTo || ctx.data.EMAIL_TO;
 				email.html = dataHTML;
@@ -60,7 +47,7 @@ module.exports = function (ctx, done) {
 				sg.send(email, function(err, json) {
 					if (err) console.error(err);
 					else log('OK - Email sent successfully.');
-					done(null, dataCSV);
+					done(null, dataHTML);
 				});
 			})
         )

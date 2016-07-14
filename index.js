@@ -20,6 +20,6 @@ request(ctx, function(error, data) {
 		console.error(error.stack);
 	} else {
 		console.log();
-		// console.log(data);
+		console.log(data);
 	}
 });
